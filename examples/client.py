@@ -45,7 +45,7 @@ def main():
     STREAM_FLAGS = [x.lstrip(' ') for x in cfg.get('settings', 'event_types').split(',')]
     REQUEST_FLAGS = { k: v for k, v in cfg.items('flags') }
 
-    with streamer.eStreamerConnection('sourcefire.gso.adp.com', 8302, basedir + 'estreamer.cer',
+    with streamer.eStreamerConnection('CHANGE_ME.SOURCEFIRE.DOMAIN', 8302, basedir + 'estreamer.cer',
                              basedir + "CHANGEME_CLIENT_CERT", basedir + "CHANGEME_CLIENT_PRIVATE_KEY") as ec:
         last_stamp = getLastStamp() if getLastStamp() else 1
         # make original request
