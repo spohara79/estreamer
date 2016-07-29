@@ -62,7 +62,6 @@ def main():
            mh = message.MessageHeader(resp)
            if mh.type == message.MSG_TYPE_MessageBundle:
                # get the last timestamp
-               print(repr(mh))
                mh_obj = mh.data.data[-1]
                ts = getattr(mh_obj, 'timestamp')
                if ts:
