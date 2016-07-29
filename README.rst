@@ -1,11 +1,14 @@
-=========
 eStreamer
 =========
 
 SourceFire eStreamer python client library
 
+Quickstart
+----------
+Install estreamer using ``pip``: ``$ pip install estreamer``.
+
 Usage
-^^^^^
+-----
 See the `examples/ <https://github.com/spohara79/estreamer/examples>`_ directory for an example client
 
 You need the following:
@@ -16,7 +19,7 @@ You need the following:
 
 
 Plugins
-^^^^^^^
+-------
 The plugin system uses an autoload and auto-unload mechanism in order to add or remove plugins without needing to restart.  Simply drop a plugin into the plugins/ directory and it will pick it up and register (and use it).  Conversely, remove the plugin from the directory and it will unregister the plugin (and not use it)
 
 To create plugins, you will need to inherit the **Plugin** class.  In addition, you will need to create a class variable (dictionary) named **__info__** that contains:
