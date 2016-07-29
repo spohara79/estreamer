@@ -21,6 +21,8 @@ You need the following:
 
 eStreamer has two types of streams: Event Stream Requests and Extended Requests.  You can use either or both types of streams.
 
+Click `here <http://www.cisco.com/c/en/us/td/docs/security/firesight/540/api/estreamer/EventStreamerIntegrationGuide/Protocol.html>`_ for more information on Stream Requests
+
 .. note:: To use the extended requests you must set bit 30 (extended_request=1) in the flags
 
 Event Stream Request Flags
