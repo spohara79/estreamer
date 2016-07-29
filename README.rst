@@ -30,9 +30,9 @@ The callback function will receive each *record* (alert that is processed)
 
 Example: 
 ::
-    from plugin import Plugin
+    from estreamer import plugin
     
-    class YourPlugin(Plugin):
+    class YourPlugin(plugin.Plugin):
         __info__ = {
             'description': 'my plugin',
             'author'     : 'my name',
