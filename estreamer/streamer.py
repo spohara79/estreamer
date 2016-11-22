@@ -37,7 +37,7 @@ class eStreamerConnection(object):
         except IOError:
             raise eStreamerKeyError("Unable to locate key file {}".format(pkey_path))
         except crypto.Error:
-            raise eStreamerKeyError("Invalid key file or bad passphrase {}".format(cert_path))
+            raise eStreamerKeyError("Invalid key file or bad passphrase {}".format(pkey_path))
         try:
             self.cert = crypto.load_certificate(crypto.FILETYPE_PEM, open(cert_path, 'rb').read())
         except IOError:
