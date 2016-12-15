@@ -171,7 +171,7 @@ class Struct(with_metaclass(MetaStruct, object)):
                     buf = getattr(getattr(self, field), 'data')
             elif fmt.startswith('BBB') or fmt.startswith('bbb'):
                 val, buf = self.__unpack__(fmt, buf)
-                setattr(self, field, sum([byte_ << (offset * 8) for offset, byte_ in enumerate(val)]))
+                setattr(self, field, sum([byte_ << (offset * 8) for offset, byte_ in enumerate(val[::-1])]))
             elif (fmt == "variable" or fmt[-1] == 's') and 'val_or_length' in locals():
                 val_len = (val_or_length[0] - self.__sub_length__) if hasattr(self, '__sub_length__') else val_or_length[0]
                 fmt = str(val_len) + 's'
