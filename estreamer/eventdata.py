@@ -629,6 +629,8 @@ class EventData(Struct):
                 self._field_format_.update({'timestamp': 'I', 'reserved': 'I'})
                 super(EventData, self).__init__(*args, **kwargs)
             else:
+                # The field values do not reset after being extended for some reason (metaclass). Without this, all events parsed after the first ARCHIVAL_RCD gets parsed as if it has the 'reserved' and 'timestamp field'
+                self._fields_ = [field_ for field_ in self._fields_ if field_[0] not in ['timestamp', 'reserved']]
                 super(EventData, self).__init__(*args, **kwargs)
             self._unpack_data()
 
