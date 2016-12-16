@@ -140,7 +140,7 @@ MSG_TYPE_StreamingRequest = 2049
 MSG_TYPE_StreamingInfo = 2051
 MSG_TYPE_MessageBundle = 4002
 
-ARCHIVAL_RCD_TYPES = [2, 400, 9, 110, 111, 112, 125, 207, 208]
+ARCHIVAL_RCD_TYPES = [2, 400, 9, 110, 111, 112, 125, 207, 208, 71]
 
 RCD_TYPE_Packet = 2
 RCD_TYPE_Priority = 4
@@ -150,6 +150,10 @@ RCD_TYPE_RuleMeta = 66
 RCD_TYPE_Classification = 67
 RCD_TYPE_CorrelationPolicy = 69
 RCD_TYPE_CorrelationRule = 70
+RCD_TYPE_Connection = 71
+RCD_TYPE_SourceTypeMeta = 90
+RCD_TYPE_SourceDetectorMeta = 96
+RCD_TYPE_UserMeta = 98
 RCD_TYPE_ExtraData = 110
 RCD_TYPE_ExtraMeta = 111
 RCD_TYPE_CorrelationEvent = 112

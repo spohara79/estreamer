@@ -51,11 +51,12 @@ class eStreamerConnection(object):
 
     def __enter__(self):
         self.ctx = SSL.Context(SSL.TLSv1_METHOD)
-        self.ctx.set_verify(SSL.VERIFY_PEER, self.validate_cert)
+        if self.verify:
+            self.ctx.set_verify(SSL.VERIFY_PEER, self.verify)
+            self.ctx.load_verify_locations(self.verify)
+            self.trusted_cert = crypto.load_certificate(crypto.FILETYPE_PEM, file(self.verify).read())
         self.ctx.use_privatekey(self.pkey)
         self.ctx.use_certificate(self.cert)
-        self.ctx.load_verify_locations(self.verify)
-        self.trusted_cert = crypto.load_certificate(crypto.FILETYPE_PEM, file(self.verify).read())
         self.sock = SSL.Connection(self.ctx, socket.socket(socket.AF_INET, socket.SOCK_STREAM))
         self.sock.connect((self.host, self.port))
         return self
@@ -64,8 +65,9 @@ class eStreamerConnection(object):
         self.close()
 
     def validate_cert(self, conn, cert, errnum, depth, ok):
+        ''' This does not properly check the cert so it will fail '''
         # just handle the self-signed use case
-        if not ok and errnum == 19:
+        if not ok and (errnum == 19 or errnum == 18):
             if cert.get_pubkey() == self.trusted_cert.get_pubkey() and cert.get_issuer() == self.trusted_cert.get_issuer():
                 if not cert.has_expired():
                     return 1
@@ -92,6 +94,10 @@ class eStreamerConnection(object):
             try:
                 #peek_bytes = self.sock.recv(8, socket.MSG_PEEK) # peeky no worky?!
                 peek_bytes = self.sock.recv(8)
+            except SSL.WantReadError as exc:
+                # SSL timeout does not work properly. If no data is available from server,
+                # we'll get this error
+                pass
             except SSL.Error as exc:
                 raise
                 #raise_from(Error("SSL Error"), exc)

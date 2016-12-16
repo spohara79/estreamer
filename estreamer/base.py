@@ -179,8 +179,8 @@ class Struct(with_metaclass(MetaStruct, object)):
                 val, buf = self.__unpack__(fmt, buf, val_len)
                 setattr(self, field, val[0])
             else:
-              val_or_length, buf = self.__unpack__(fmt, buf)
-              setattr(self, field, val_or_length[0])
+                val_or_length, buf = self.__unpack__(fmt, buf)
+                setattr(self, field, val_or_length[0])
         if buf:
             self.data = buf
 
