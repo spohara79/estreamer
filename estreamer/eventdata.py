@@ -8,7 +8,7 @@ import struct
 
 
 # which record types use the archival stamp
-ARCHIVAL_RCD_TYPES = [2, 400, 9, 110, 111, 112, 125, 207, 208]
+ARCHIVAL_RCD_TYPES = [2, 400, 9, 110, 111, 112, 125, 207, 208, 71]
 
 # record types we will handle
 RCD_TYPE_Packet = 2
@@ -21,6 +21,10 @@ RCD_TYPE_RuleMeta = 66
 RCD_TYPE_Classification = 67
 RCD_TYPE_CorrelationPolicy = 69
 RCD_TYPE_CorrelationRule = 70
+RCD_TYPE_Connection = 71
+RCD_TYPE_SourceTypeMeta = 90
+RCD_TYPE_SourceDetectorMeta = 96
+RCD_TYPE_UserMeta = 98
 RCD_TYPE_ExtraData = 110 
 RCD_TYPE_ExtraMeta = 111
 RCD_TYPE_CorrelationEvent = 112
@@ -190,6 +194,150 @@ class Classification(Struct):
         ('description', 'variable', 0),
         ('uuid', 'uint8[16]', 0),
         ('uuid_rev', 'uint8[16]', 0),
+    ]
+
+class UserMeta(Struct):
+
+    _fields_ = [
+        ('block_type', 'uint32', 0),
+        ('block_length', 'uint32', 0),
+        ('user_id', 'uint32', 0),
+        ('protocol', 'uint32', 0),
+        ('username', StringDataBlock, 0),
+    ]
+
+class SourceTypeMeta(Struct):
+
+    _fields_ = [
+        ('id', 'uint32', 0),
+        ('length', 'uint32', 0),
+        ('name', 'variable', 0),
+    ]
+
+class SourceDetectorMeta(Struct):
+
+    _fields_ = [
+        ('id', 'uint32', 0),
+        ('length', 'uint32', 0),
+        ('name', 'variable', 0),
+    ]
+
+class WebAppMeta(Struct):
+
+    _fields_ = [
+        ('id', 'uint32', 0),
+        ('length', 'uint32', 0),
+        ('name', 'variable', 0),
+    ]
+
+class DiscoveryHeader(Struct):
+    '''
+    we use the __hide_data__ as a hack.. to prevent the 'data' field from being populated with
+    the remaining buffer when parsing a structure at arbitrary places inside another Struct
+    '''
+    __hide_data__ = True
+
+    _fields_ = [
+        ('device_id', 'uint32', 0),
+        ('legacy_ip', 'uint32', 0),
+        ('mac_addr', 'uint8[6]', 0),
+        ('has_ipv6', 'uint8', 0),
+        ('reserved', 'uint8', 0),
+        ('event_sec', 'uint32', 0),
+        ('event_usec', 'uint32', 0),
+        ('event_type', 'uint32', 0),
+        ('event_subtype', 'uint32', 0),
+        ('file_num', 'uint32', 0),
+        ('file_pos', 'uint32', 0),
+        ('ipv6_addr', 'uint8[16]', 0),
+    ]
+
+class Connection(Struct):
+
+    _fields_ = [
+        ('discovery_header', DiscoveryHeader, 0),
+        ('block_type', 'uint32', 155),
+        ('block_length', 'uint32', 0),
+        ('device_id', 'uint32', 0),
+        ('ingres_zone', 'uint8[16]', 0),
+        ('egress_zone', 'uint8[16]', 0),
+        ('ingress_interface', 'uint8[16]', 0),
+        ('egress_interface', 'uint8[16]', 0),
+        ('initiator_ip', 'uint8[16]', 0),
+        ('responder_ip', 'uint8[16]', 0),
+        ('policy_revision', 'uint8[16]', 0),
+        ('rule_id', 'uint32', 0),
+        ('rule_action', 'uint16', 0),
+        ('rule_reason', 'uint16', 0),
+        ('initiator_port', 'uint16', 0),
+        ('responder_port', 'uint16', 0),
+        ('tcp_flags', 'uint16', 0),
+        ('protocol', 'uint8', 0),
+        ('netflow_source', 'uint8[16]', 0),
+        ('instance_id', 'uint16', 0),
+        ('conn_counter', 'uint16', 0),
+        ('first_pkt_time', 'uint8[4]', 0),
+        ('last_pkt_time', 'uint32', 0),
+        ('initiator_tx_pkts', 'uint64', 0),
+        ('resp_tx_pkts', 'uint64', 0),
+        ('initiator_tx_bytes', 'uint64', 0),
+        ('resp_tx_bytes', 'uint64', 0),
+        ('user_id', 'uint32', 0),
+        ('app_prot_id', 'uint32', 0),
+        ('url_category', 'uint32', 0),
+        ('url_reputation', 'uint32', 0),
+        ('client_app_id', 'uint32', 0),
+        ('web_app_id', 'uint32', 0),
+        ('client_url', StringDataBlock, 0),
+        ('netbios_name', StringDataBlock, 0),
+        ('client_app_version', StringDataBlock, 0),
+        ('monitor_rule_1', 'uint32', 0),
+        ('monitor_rule_2', 'uint32', 0),
+        ('monitor_rule_3', 'uint32', 0),
+        ('monitor_rule_4', 'uint32', 0),
+        ('monitor_rule_5', 'uint32', 0),
+        ('monitor_rule_6', 'uint32', 0),
+        ('monitor_rule_7', 'uint32', 0),
+        ('monitor_rule_8', 'uint32', 0),
+        ('sec_intel_src_dst', 'uint8', 0),
+        ('sec_intel_layer', 'uint8', 0),
+        ('file_event_count', 'uint16', 0),
+        ('intrusion_event_count', 'uint16', 0),
+        ('initiator_country', 'uint16', 0),
+        ('resp_country', 'uint16', 0),
+        ('ioc_num', 'uint16', 0),
+        ('src_autonomous_sys', 'uint32', 0),
+        ('dst_autonomous_sys', 'uint32', 0),
+        ('snmp_in', 'uint16', 0),
+        ('snmp_out', 'uint16', 0),
+        ('src_tos', 'uint8', 0),
+        ('dst_tos', 'uint8', 0),
+        ('src_mask', 'uint8', 0),
+        ('dst_mask', 'uint8', 0),
+        ('sec_ctxt', 'uint8[16]', 0),
+        ('vlan_id', 'uint16', 0),
+        ('referenced_host', StringDataBlock, 0),
+        ('user_agent', StringDataBlock, 0),
+        ('http_referrer', StringDataBlock, 0),
+        ('ssl_cert_fingerprint', 'uint8[20]', 0),
+        ('ssl_pol_id', 'uint8[16]', 0),
+        ('ssl_rule_id', 'uint32', 0),
+        ('ssl_ciph_suite', 'uint16', 0),
+        ('ssl_version', 'uint8', 0),
+        ('ssl_srv_cert_status', 'uint16', 0),
+        ('ssl_actual_action', 'uint16', 0),
+        ('ssl_expected_action', 'uint16', 0),
+        ('ssl_flow_status', 'uint16', 0),
+        ('ssl_flow_error', 'uint32', 0),
+        ('ssl_flow_msgs', 'uint32', 0),
+        ('ssl_flow_flags', 'uint64', 0),
+        ('ssl_srv_name', StringDataBlock, 0),
+        ('ssl_url_category', 'uint32', 0),
+        ('ssl_session_id', 'uint8[32]', 0),
+        ('ssl_session_id_len', 'uint8', 0),
+        ('ssl_ticket_id', 'uint8[20]', 0),
+        ('ssl_ticket_id_len', 'uint8', 0),
+        ('net_analysis_policy_revision', 'uint8[16]', 0),
     ]
 
 class CorrelationPolicy(Struct):
@@ -621,17 +769,23 @@ class EventData(Struct):
 
     def __init__(self, *args, **kwargs):
         if args:
+
             self.type = struct.unpack('>I', args[0][:4])[0]
             # check if it's  an event data record that uses archival timestamps and if we've set archival
             if self.type in ARCHIVAL_RCD_TYPES and config.test_bit(Struct.get_flags(), 23) and 'reserved' not in self._field_names_:
+                #import ipdb;ipdb.set_trace()
                 self._fields_.extend([('timestamp', 'uint32', 0), ('reserved', 'uint32', 0)])
                 self._field_names_.extend(['timestamp', 'reserved'])
                 self._field_format_.update({'timestamp': 'I', 'reserved': 'I'})
-                super(EventData, self).__init__(*args, **kwargs)
             else:
+                pass
                 # The field values do not reset after being extended for some reason (metaclass). Without this, all events parsed after the first ARCHIVAL_RCD gets parsed as if it has the 'reserved' and 'timestamp field'
-                self._fields_ = [field_ for field_ in self._fields_ if field_[0] not in ['timestamp', 'reserved']]
-                super(EventData, self).__init__(*args, **kwargs)
+                #map(self._fields_.remove, [f for f in self._fields_ if f[0] in ['timestamp', 'reserved']])
+                #map(self._field_names_.remove, [f for f in self._field_names_ if f[0] in ['timestamp', 'reserved']])
+                #for k in ['timestamp', 'reserved']:
+                #    self._field_format_.pop(k)
+
+            super(EventData, self).__init__(*args, **kwargs)
             self._unpack_data()
 
     def _unpack_data(self):
