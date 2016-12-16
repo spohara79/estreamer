@@ -773,7 +773,6 @@ class EventData(Struct):
             self.type = struct.unpack('>I', args[0][:4])[0]
             # check if it's  an event data record that uses archival timestamps and if we've set archival
             if self.type in ARCHIVAL_RCD_TYPES and config.test_bit(Struct.get_flags(), 23) and 'reserved' not in self._field_names_:
-                #import ipdb;ipdb.set_trace()
                 self._fields_.extend([('timestamp', 'uint32', 0), ('reserved', 'uint32', 0)])
                 self._field_names_.extend(['timestamp', 'reserved'])
                 self._field_format_.update({'timestamp': 'I', 'reserved': 'I'})
@@ -782,8 +781,10 @@ class EventData(Struct):
                 # The field values do not reset after being extended for some reason (metaclass). Without this, all events parsed after the first ARCHIVAL_RCD gets parsed as if it has the 'reserved' and 'timestamp field'
                 #map(self._fields_.remove, [f for f in self._fields_ if f[0] in ['timestamp', 'reserved']])
                 #map(self._field_names_.remove, [f for f in self._field_names_ if f[0] in ['timestamp', 'reserved']])
-                #for k in ['timestamp', 'reserved']:
-                #    self._field_format_.pop(k)
+                self._fields_ = [f for f in self._fields_ if f[0] not in ['timestamp', 'reserved']]
+                self._field_names_ = [f for f in self._field_names_ if f[0] not in ['timestamp', 'reserved']]
+                for k in ['timestamp', 'reserved']:
+                    self._field_format_.pop(k)
 
             super(EventData, self).__init__(*args, **kwargs)
             self._unpack_data()
