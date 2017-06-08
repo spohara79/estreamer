@@ -4,10 +4,6 @@ eStreamer
 
 SourceFire eStreamer python client library
 
-Quickstart
-----------
-Install estreamer using ``pip``: ``$ pip install estreamer``.
-Get the `examples/ <https://github.com/spohara79/estreamer/examples>`_ client to get started capturing pcaps
 
 Usage
 -----
