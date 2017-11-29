@@ -52,7 +52,7 @@ class eStreamerConnection(object):
     def __enter__(self):
         self.ctx = SSL.Context(SSL.TLSv1_METHOD)
         if self.verify:
-            self.ctx.set_verify(SSL.VERIFY_PEER, self.verify)
+            self.ctx.set_verify(SSL.VERIFY_PEER, self.validate_cert)
             self.ctx.load_verify_locations(self.verify)
             self.trusted_cert = crypto.load_certificate(crypto.FILETYPE_PEM, file(self.verify).read())
         self.ctx.use_privatekey(self.pkey)
